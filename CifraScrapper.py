@@ -36,6 +36,7 @@ class scrapper:
 
         return artists
 
+    #Return a dictionary of musics
     def get_musics_by_artist(self, artist = None):
         if(artist == None): return "Artist is mandatory!"
 
@@ -54,3 +55,41 @@ class scrapper:
             musics[nome] = link
 
         return musics
+
+    #Return a dict with music info
+    def get_musics_lyrics(self, link = None):
+        if(link == None): return "artist and music link is mandatory!"
+        
+        url = link + '/letra/'
+        soap = self.make_request(url)
+
+        body = soap.find('body')
+        tbl = body.find('div', attrs={'class':'g-1 g-fix cifra'})
+        
+        music = tbl.find('h1').get_text()
+        artist = tbl.find('h2').find('a').get_text()
+
+        lrcs = tbl.find('div', attrs={'class':'letra'}).find_all('p')
+
+        lyrics = ""
+        music_info = {}
+        for lyric in lrcs:
+
+            #Replace the tags br
+            lyric = str(lyric).replace('<br/>', ' ')
+            lyrics += lyric
+
+        
+        #Added a paragraph
+        lyrics = lyrics.replace('</p><p>', '.\n\n')
+
+        #Remove <p> and </p> from the final of lyrics
+        lyrics = lyrics.replace('<p>', '')
+        lyrics = lyrics.replace('</p>', '.')
+
+        music_info['music name'] = music
+        music_info['music artist'] = artist
+        music_info['music lyrics'] = lyrics
+
+        return music_info        
+
