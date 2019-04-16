@@ -2,7 +2,7 @@ from CifraScrapper import scrapper
 
 scrap = scrapper()
 
-artists = scrap.get_artists_by_letter('A')
+musics = scrap.get_musics_by_artist('/racionais-mcs')
 
-for art in artists.keys():
-    print(art, artists[art])
+for music in musics.keys():
+    print(music, musics[music])
